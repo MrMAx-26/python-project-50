@@ -2,3 +2,5 @@
 .venv/
 dist/
 demo.cast
+.coverage
+coverage.xml
