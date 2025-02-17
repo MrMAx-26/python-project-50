@@ -9,3 +9,6 @@ package-install:
 
 gendiff:
 	uv run gendiff
+
+lint:
+	uv run ruff check gendiff
