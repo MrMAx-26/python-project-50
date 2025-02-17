@@ -25,15 +25,22 @@ def generate_diff(file1, file2) -> str:
     keys = sorted(set(data1.keys()).union(data2.keys()))
     diff = []
     for key in keys:
-        if key in data1 and key in data2:
-            if data1[key] != data2[key]:
-                diff.append(f' - {key}: {data1[key]}')
-                diff.append(f' + {key}: {data2[key]}')
-            else:
-                diff.append(f'   {key}: {data1[key]}')
-        elif key in data1:
-            diff.append(f' - {key}: {data1[key]}')
-        elif key in data2:
-            diff.append(f' + {key}: {data2[key]}')
+        diff.append(generate_key_diff(key, data1, data2))
     result_diff = '{\n' + '\n'.join(diff) + '\n}'
     return result_diff
+
+
+def generate_key_diff(key, data1, data2) -> str:
+    if key in data1 and key in data2:
+        return handle_common_key(key, data1[key], data2[key])
+    elif key in data1:
+        return f' - {key}: {data1[key]}'
+    elif key in data2:
+        return f' + {key}: {data2[key]}'
+    return ''
+
+
+def handle_common_key(key, value1, value2) -> str:
+    if value1 != value2:
+        return f' - {key}: {value1}\n + {key}: {value2}'
+    return f'   {key}: {value1}'
