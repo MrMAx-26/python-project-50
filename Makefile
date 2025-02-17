@@ -12,3 +12,9 @@ gendiff:
 
 lint:
 	uv run ruff check gendiff
+
+check:
+	test check
+
+test:
+	uv run pytest
