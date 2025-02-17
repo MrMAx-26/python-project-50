@@ -1,5 +1,6 @@
-import json
 import argparse
+import json
+
 
 def run_gendiff():
     parser = argparse.ArgumentParser(

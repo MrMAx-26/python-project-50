@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 
-from gendiff.engine import reading_and_parsing, run_gendiff
 from gendiff import generate_diff
+from gendiff.engine import reading_and_parsing, run_gendiff
+
 
 def main():
     args = run_gendiff()
