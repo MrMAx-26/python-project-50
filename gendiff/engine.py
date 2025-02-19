@@ -11,7 +11,11 @@ def run_gendiff():
     parser.add_argument('second_file')
     parser.add_argument('-f', '--format', help='set format of output')
     args = parser.parse_args()
-    return args
+    print_diff(args)
+
+
+def print_diff(args):
+    print(generate_diff(args.first_file, args.second_file))
 
 
 def reading_and_parsing(file) -> dict:
