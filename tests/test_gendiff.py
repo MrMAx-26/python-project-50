@@ -10,6 +10,20 @@ def temp_json_files(tmp_path):
     return file1, file2
 
 
+def test_get_diff(temp_json_files):
+    file1, file2 = temp_json_files
+    data1 = {'key1': 'value1', 'key2': 'value2'}
+    data2 = {'key2': 'value2', 'key3': 'value3'}
+    with open(file1, 'w') as f:
+        json.dump(data1, f)
+    with open(file2, 'w') as f:
+        json.dump(data2, f)
+    result = engine.get_and_print_diff(file1, file2)
+
+    expected_output = '{\n - key1: value1\n   key2: value2\n + key3: value3\n}'
+    assert result == expected_output
+
+
 def test_identical(temp_json_files):
     file1, file2 = temp_json_files
     data = {'key1': 'value1', 'key2': 'value2'}
