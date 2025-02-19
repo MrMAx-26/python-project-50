@@ -48,6 +48,29 @@ def test_missing_keys(temp_json_files):
     assert engine.generate_diff(file1, file2) == expected_output
 
 
+def test_empty_files(temp_json_files):
+    file1, file2 = temp_json_files
+    with open(file1, 'w') as f:
+        json.dump({}, f)
+    with open(file2, 'w') as f:
+        json.dump({}, f)
+
+    expected_output = '{\n\n}'
+    assert engine.generate_diff(file1, file2) == expected_output
+
+
+def test_one_empty_file(temp_json_files):
+    file1, file2 = temp_json_files
+    data = {'key1': 'value1'}
+    with open(file1, 'w') as f:
+        json.dump({}, f)
+    with open(file2, 'w') as f:
+        json.dump(data, f)
+
+    expected_output = '{\n + key1: value1\n}'
+    assert engine.generate_diff(file1, file2) == expected_output
+
+
 def test_generate_key_diff_in_first():
     result = engine.generate_key_diff("key1", {"key1": "value1"}, {})
 
