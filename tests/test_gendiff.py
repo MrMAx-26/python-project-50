@@ -46,3 +46,32 @@ def test_missing_keys(temp_json_files):
 
     expected_output = '{\n - key1: value1\n + key2: value2\n}'
     assert engine.generate_diff(file1, file2) == expected_output
+
+
+def test_generate_key_diff_in_first():
+    result = engine.generate_key_diff("key1", {"key1": "value1"}, {})
+
+    expected_output = " - key1: value1"
+    assert result == expected_output
+
+
+def test_generate_key_diff_in_second():
+    result = engine.generate_key_diff("key4", {}, {"key4": "value4"})
+
+    expected_output = " + key4: value4"
+    assert result == expected_output
+
+
+def test_handle_common_key_equal_values():
+    result = engine.handle_common_key("key3", "value3", "value3")
+
+    expected_output = "   key3: value3"
+    assert result == expected_output
+
+
+
+def test_handle_common_key_different_values():
+    result = engine.handle_common_key("key2", "value2", "value2_changed")
+
+    expected_output = " - key2: value2\n + key2: value2_changed"
+    assert result == expected_output
