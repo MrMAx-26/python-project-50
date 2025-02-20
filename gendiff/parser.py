@@ -1,3 +1,7 @@
+import json
+import yaml
+
+
 def is_json(file) -> bool:
     return str(file).endswith('.json')
 
@@ -7,8 +11,6 @@ def is_yaml(file) -> bool:
 
 
 def reading_and_parsing(file) -> dict:
-    import json
-    import yaml
     data = {}
     if is_json(file):
         data = json.load(open(file))
