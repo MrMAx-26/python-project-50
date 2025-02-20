@@ -1,9 +1,9 @@
-from gendiff.parser import reading_and_parsing
 import argparse
+
+from gendiff.parser import reading_and_parsing
 
 
 def run_gendiff():
-    import argparse
     parser = argparse.ArgumentParser(
         usage='gendiff [-h] [-f FORMAT] first_file second_file',
         description='Compares two configuration files and shows a difference.'
