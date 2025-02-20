@@ -1,8 +1,9 @@
+from gendiff.parser import reading_and_parsing
 import argparse
-from gendiff import parser
 
 
 def run_gendiff():
+    import argparse
     parser = argparse.ArgumentParser(
         usage='gendiff [-h] [-f FORMAT] first_file second_file',
         description='Compares two configuration files and shows a difference.'
@@ -21,8 +22,8 @@ def get_and_print_diff(first_file, second_file):
 
 
 def generate_diff(file1, file2) -> str:
-    data1 = parser.reading_and_parsing(file1)
-    data2 = parser.reading_and_parsing(file2)
+    data1 = reading_and_parsing(file1)
+    data2 = reading_and_parsing(file2)
     keys = sorted(set(data1.keys()).union(data2.keys()))
     diff = []
     for key in keys:
