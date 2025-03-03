@@ -1,114 +1,157 @@
-from gendiff import engine
+from gendiff.formatters import stylish
+from gendiff.engine import get_diff
 import pytest
-import json
 
 
 @pytest.fixture
-def temp_json_files(tmp_path):
-    file1 = tmp_path / "test1.json"
-    file2 = tmp_path / "test2.json"
-    return file1, file2
+def sample_diff():
+    return {
+        'key1': {'status': 'added', 'value': 'value1'},
+        'key2': {'status': 'removed', 'value': 'value2'},
+        'key3': {'status': 'changed', 'old_value': 'old_value3', 'new_value': 'new_value3'},
+        'key4': {'status': 'unchanged', 'value': 'value4'},
+        'key5': {'status': 'nested', 'value': {
+            'nested_key1': {'status': 'added', 'value': 'nested_value1'},
+            'nested_key2': {'status': 'unchanged', 'value': 'nested_value2'}
+        }},
+    }
 
 
-def test_get_diff(temp_json_files):
-    file1, file2 = temp_json_files
-    data1 = {'key1': 'value1', 'key2': 'value2'}
-    data2 = {'key2': 'value2', 'key3': 'value3'}
-    with open(file1, 'w') as f:
-        json.dump(data1, f)
-    with open(file2, 'w') as f:
-        json.dump(data2, f)
-    result = engine.get_and_print_diff(file1, file2)
-
-    expected_output = '{\n - key1: value1\n   key2: value2\n + key3: value3\n}'
-    assert result == expected_output
+def test_stylish_added(sample_diff):
+    diff = {'key1': {'status': 'added', 'value': sample_diff['key1']['value']}}
+    expected_output = (
+        "{\n"
+        "  + key1: value1\n"
+        "}"
+    )
+    assert stylish.stylish(diff) == expected_output
 
 
-def test_identical(temp_json_files):
-    file1, file2 = temp_json_files
-    data = {'key1': 'value1', 'key2': 'value2'}
-    with open(file1, 'w') as f:
-        json.dump(data, f)
-    with open(file2, 'w') as f:
-        json.dump(data, f)
-
-    expected_output = '{\n   key1: value1\n   key2: value2\n}'
-    assert engine.generate_diff(file1, file2) == expected_output
+def test_stylish_removed(sample_diff):
+    diff = {'key2': {'status': 'removed', 'value': sample_diff['key2']['value']}}
+    expected_output = (
+        "{\n"
+        "  - key2: value2\n"
+        "}"
+    )
+    assert stylish.stylish(diff) == expected_output
 
 
-def test_diff(temp_json_files):
-    file1, file2 = temp_json_files
-    data1 = {'key1': 'value1', 'key2': 'value2'}
-    data2 = {'key1': 'value1', 'key2': 'value3'}
-    with open(file1, 'w') as f:
-        json.dump(data1, f)
-    with open(file2, 'w') as f:
-        json.dump(data2, f)
-
-    expected_output = '{\n   key1: value1\n - key2: value2\n + key2: value3\n}'
-    assert engine.generate_diff(file1, file2) == expected_output
-
-
-def test_missing_keys(temp_json_files):
-    file1, file2 = temp_json_files
-    data1 = {'key1': 'value1'}
-    data2 = {'key2': 'value2'}
-    with open(file1, 'w') as f:
-        json.dump(data1, f)
-    with open(file2, 'w') as f:
-        json.dump(data2, f)
-
-    expected_output = '{\n - key1: value1\n + key2: value2\n}'
-    assert engine.generate_diff(file1, file2) == expected_output
+def test_stylish_changed(sample_diff):
+    diff = {
+        'key3': {'status': 'changed', 'old_value': sample_diff['key3']['old_value'], 'new_value': sample_diff['key3']['new_value']},
+        'key4': {'status': 'unchanged', 'value': sample_diff['key4']['value']}
+    }
+    expected_output = (
+        "{\n"
+        "  - key3: old_value3\n"
+        "  + key3: new_value3\n"
+        "    key4: value4\n"
+        "}"
+    )
+    assert stylish.stylish(diff) == expected_output
 
 
-def test_empty_files(temp_json_files):
-    file1, file2 = temp_json_files
-    with open(file1, 'w') as f:
-        json.dump({}, f)
-    with open(file2, 'w') as f:
-        json.dump({}, f)
-
-    expected_output = '{\n\n}'
-    assert engine.generate_diff(file1, file2) == expected_output
-
-
-def test_one_empty_file(temp_json_files):
-    file1, file2 = temp_json_files
-    data = {'key1': 'value1'}
-    with open(file1, 'w') as f:
-        json.dump({}, f)
-    with open(file2, 'w') as f:
-        json.dump(data, f)
-
-    expected_output = '{\n + key1: value1\n}'
-    assert engine.generate_diff(file1, file2) == expected_output
+def test_stylish_nested(sample_diff):
+    diff = {
+        'key5': {'status': 'nested', 'value': sample_diff['key5']['value']},
+        'key2': {'status': 'removed', 'value': sample_diff['key2']['value']}
+    }
+    expected_output = (
+        "{\n"
+        "    key5: {\n"
+        "      + nested_key1: nested_value1\n"
+        "        nested_key2: nested_value2\n"
+        "    }\n"
+        "  - key2: value2\n"
+        "}"
+    )
+    assert stylish.stylish(diff) == expected_output
 
 
-def test_generate_key_diff_in_first():
-    result = engine.generate_key_diff("key1", {"key1": "value1"}, {})
-
-    expected_output = " - key1: value1"
-    assert result == expected_output
-
-
-def test_generate_key_diff_in_second():
-    result = engine.generate_key_diff("key4", {}, {"key4": "value4"})
-
-    expected_output = " + key4: value4"
-    assert result == expected_output
+@pytest.fixture
+def sample_data():
+    return {
+        'file1': {'a': 1, 'b': 2, 'c': 3},
+        'file2': {'a': 1, 'b': 2, 'd': 4},
+        'file3': {'a': 1, 'b': {'x': 10, 'y': 20}},
+        'file4': {'a': 1, 'b': {'x': 10, 'y': 30}},
+    }
 
 
-def test_handle_common_key_equal_values():
-    result = engine.handle_common_key("key3", "value3", "value3")
+def test_get_diff_added():
+    file1 = {'a': 1, 'b': 2}
+    file2 = {'a': 1, 'b': 2, 'c': 3}
+    expected = {
+        'a': {'status': 'unchanged', 'value': 1},
+        'b': {'status': 'unchanged', 'value': 2},
+        'c': {'status': 'added', 'value': 3}
+    }
+    assert get_diff(file1, file2) == expected
 
-    expected_output = "   key3: value3"
-    assert result == expected_output
+
+def test_get_diff_removed(sample_data):
+    file1 = sample_data['file1']
+    file2 = {'a': 1, 'b': 2}
+    expected = {
+        'a': {'status': 'unchanged', 'value': 1},
+        'b': {'status': 'unchanged', 'value': 2},
+        'c': {'status': 'removed', 'value': 3}
+    }
+    assert get_diff(file1, file2) == expected
 
 
+def test_get_diff_unchanged():
+    file1 = {'a': 1, 'b': 2}
+    file2 = {'a': 1, 'b': 2}
+    expected = {
+        'a': {'status': 'unchanged', 'value': 1},
+        'b': {'status': 'unchanged', 'value': 2}
+    }
+    assert get_diff(file1, file2) == expected
 
-def test_handle_common_key_different_values():
-    result = engine.handle_common_key("key2", "value2", "value2_changed")
 
-    expected_output = " - key2: value2\n + key2: value2_changed"
-    assert result == expected_output
+def test_get_diff_changed():
+    file1 = {'a': 1, 'b': 2}
+    file2 = {'a': 1, 'b': 3}
+    expected = {
+        'a': {'status': 'unchanged', 'value': 1},
+        'b': {
+            'status': 'changed',
+            'old_value': 2,
+            'new_value': 3
+        }
+    }
+    assert get_diff(file1, file2) == expected
+
+
+def test_get_diff_complex(sample_data):
+    file1 = sample_data['file1']
+    file2 = sample_data['file2']
+    expected = {
+        'a': {'status': 'unchanged', 'value': 1},
+        'b': {'status': 'unchanged', 'value': 2},
+        'c': {'status': 'removed', 'value': 3},
+        'd': {'status': 'added', 'value': 4}
+    }
+    assert get_diff(file1, file2) == expected
+
+
+def test_get_diff_nested(sample_data):
+    file1 = sample_data['file3']
+    file2 = sample_data['file4']
+    expected = {
+        'a': {'status': 'unchanged', 'value': 1},
+        'b': {
+            'status': 'nested',
+            'value': {
+                'x': {'status': 'unchanged', 'value': 10}, 
+                'y': {
+                    'status': 'changed',
+                    'old_value': 20,
+                    'new_value': 30
+                }
+            }
+        }
+    }
+    assert get_diff(file1, file2) == expected
