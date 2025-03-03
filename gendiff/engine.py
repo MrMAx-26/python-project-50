@@ -1,48 +1,29 @@
-import argparse
-
-from gendiff.parser import reading_and_parsing
+from gendiff.formatters.stylish import stylish
 
 
-def run_gendiff():
-    parser = argparse.ArgumentParser(
-        usage='gendiff [-h] [-f FORMAT] first_file second_file',
-        description='Compares two configuration files and shows a difference.'
-        )
-    parser.add_argument('first_file')
-    parser.add_argument('second_file')
-    parser.add_argument('-f', '--format', help='set format of output')
-    args = parser.parse_args()
-    get_and_print_diff(args.first_file, args.second_file)
+def get_diff(file1, file2):
+    diff = {}
+    keys = sorted(set(file1.keys()).union(set(file2.keys())))
 
-
-def get_and_print_diff(first_file, second_file):
-    diff = generate_diff(first_file, second_file)
-    print(diff)
+    for key in keys:
+        if key not in file1:
+            diff[key] = {'status': 'added', 'value': file2[key]}
+        elif key not in file2:
+            diff[key] = {'status': 'removed', 'value': file1[key]}
+        elif isinstance(file1[key], dict) and isinstance(file2[key], dict):
+            diff[key] = {'status': 'nested', 
+                'value': get_diff(file1[key], file2[key])}
+        elif file1[key] == file2[key]:
+            diff[key] = {'status': 'unchanged', 'value': file1[key]}
+        else:
+            diff[key] = {
+                'status': 'changed',
+                'old_value': file1[key],
+                'new_value': file2[key]
+            }
     return diff
 
 
-def generate_diff(file1, file2) -> str:
-    data1 = reading_and_parsing(file1)
-    data2 = reading_and_parsing(file2)
-    keys = sorted(set(data1.keys()).union(data2.keys()))
-    diff = []
-    for key in keys:
-        diff.append(generate_key_diff(key, data1, data2))
-    result_diff = '{\n' + '\n'.join(diff) + '\n}'
-    return result_diff
-
-
-def generate_key_diff(key, data1, data2) -> str:
-    if key in data1 and key in data2:
-        return handle_common_key(key, data1[key], data2[key])
-    elif key in data1:
-        return f' - {key}: {data1[key]}'
-    elif key in data2:
-        return f' + {key}: {data2[key]}'
-    return ''
-
-
-def handle_common_key(key, value1, value2) -> str:
-    if value1 != value2:
-        return f' - {key}: {value1}\n + {key}: {value2}'
-    return f'   {key}: {value1}'
+def get_formatter(diff, formatter):
+    if formatter == 'stylish':
+        return stylish(diff)

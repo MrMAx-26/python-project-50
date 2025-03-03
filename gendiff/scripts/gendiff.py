@@ -1,10 +1,13 @@
 #!/usr/bin/env python
 
-from gendiff.engine import run_gendiff
+from gendiff.cli import parse_args
+from gendiff.generate_diff import generate_diff
 
 
 def main():
-    run_gendiff()
+    args = parse_args()
+    format_diff = generate_diff(args.first_file, args.second_file, args.format)
+    print(format_diff)
 
 
 if __name__ == '__main__':

@@ -8,10 +8,10 @@ def is_json(file) -> bool:
 
 
 def is_yaml(file) -> bool:
-    return str(file).endswith('.yml')
+    return str(file).endswith('.yml') or str(file).endswith('.yaml')
 
 
-def reading_and_parsing(file) -> dict:
+def get_file(file) -> dict:
     data = {}
     if is_json(file):
         data = json.load(open(file))
