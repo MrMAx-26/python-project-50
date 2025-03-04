@@ -1,5 +1,5 @@
-from gendiff.formatters.stylish import stylish
 from gendiff.formatters.plain import plain
+from gendiff.formatters.stylish import stylish
 
 
 def get_diff(file1, file2):

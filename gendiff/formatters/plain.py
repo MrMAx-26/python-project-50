@@ -8,7 +8,8 @@ def plain(diff):
                 match status:
                     case 'added':
                         result.append(f"Property '{full_path}' "
-                            f"was added with value: {format_value(val['value'])}"
+                            "was added with value: "
+                            f"{format_value(val['value'])}"
                         )
                     case 'removed':
                         result.append(f"Property '{full_path}' was removed")
