@@ -1,4 +1,5 @@
 from gendiff.formatters.stylish import stylish
+from gendiff.formatters.plain import plain
 
 
 def get_diff(file1, file2):
@@ -27,3 +28,5 @@ def get_diff(file1, file2):
 def get_formatter(diff, formatter):
     if formatter == 'stylish':
         return stylish(diff)
+    elif formatter == 'plain':
+        return plain(diff)
