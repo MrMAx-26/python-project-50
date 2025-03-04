@@ -1,5 +1,6 @@
 from gendiff.formatters import stylish
 from gendiff.engine import get_diff
+from gendiff.formatters import plain
 import pytest
 
 
@@ -155,3 +156,45 @@ def test_get_diff_nested(sample_data):
         }
     }
     assert get_diff(file1, file2) == expected
+
+
+def test_plain_added():
+    diff = {
+        'key1': {'status': 'added', 'value': 'new_value'},
+        'key2': {'status': 'unchanged', 'value': 'old_value'},
+    }
+    expected_output = "Property 'key1' was added with value: 'new_value'"
+    assert plain.plain(diff) == expected_output
+
+
+def test_plain_removed():
+    diff = {
+        'key1': {'status': 'removed'},
+        'key2': {'status': 'unchanged', 'value': 'old_value'},
+    }
+    expected_output = "Property 'key1' was removed"
+    assert plain.plain(diff) == expected_output
+
+
+def test_plain_changed():
+    diff = {
+        'key1': {'status': 'changed', 'old_value': 'old_value', 'new_value': 'new_value'},
+        'key2': {'status': 'unchanged', 'value': 'unchanged_value'},
+    }
+    expected_output = (
+        "Property 'key1' was updated. From 'old_value' to 'new_value'"
+    )
+    assert plain.plain(diff) == expected_output
+
+
+def test_plain_nested():
+    diff = {
+        'key1': {'status': 'nested', 'value': {
+            'nested_key': {'status': 'added', 'value': 'nested_value'}
+        }},
+        'key2': {'status': 'unchanged', 'value': 'unchanged_value'},
+    }
+    expected_output = (
+        "Property 'key1.nested_key' was added with value: 'nested_value'"
+    )
+    assert plain.plain(diff) == expected_output
