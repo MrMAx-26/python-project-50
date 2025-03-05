@@ -1,0 +1,4 @@
+exclude_paths:
+  - "**/parser.py"
+  - "**/scripts/gendiff.py"
+  - "**/generate_diff.py"
