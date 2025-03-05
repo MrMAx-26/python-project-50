@@ -1,8 +1,6 @@
-from gendiff.formatters import stylish
 from gendiff.engine import get_diff, get_formatter
-from gendiff.formatters import plain
-from gendiff.formatters import json
 from json import dumps, dump
+from gendiff.formatters.plain import format_value
 import yaml
 from gendiff import parser
 import pytest
@@ -218,6 +216,44 @@ def test_plain_nested():
         "Property 'key1.nested_key' was added with value: 'nested_value'"
     )
     assert result == expected_output
+
+
+def test_plain_unchanged():
+    diff = {
+        'key1': {'status': 'unchanged', 'value': 'old_value'},
+        'key2': {'status': 'added', 'value': 'new_value'},
+    }
+    result = get_formatter(diff, 'plain')
+    expected_output = "Property 'key2' was added with value: 'new_value'"
+    assert result == expected_output
+
+
+def test_format_value_string():
+    assert format_value("test") == "'test'"
+
+
+def test_format_value_integer():
+    assert format_value(42) == "42"
+
+
+def test_format_value_float():
+    assert format_value(3.14) == "3.14"
+
+
+def test_format_value_boolean_true():
+    assert format_value(True) == "true"
+
+
+def test_format_value_boolean_false():
+    assert format_value(False) == "false"
+
+
+def test_format_value_none():
+    assert format_value(None) == "null"
+
+
+def test_format_value_dict():
+    assert format_value({'key': 'value'}) == '[complex value]'
 
 
 @pytest.fixture
