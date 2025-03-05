@@ -4,6 +4,10 @@
 [![Maintainability](https://api.codeclimate.com/v1/badges/093de477877707bb825c/maintainability)](https://codeclimate.com/github/MrMAx-26/python-project-50/maintainability)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/093de477877707bb825c/test_coverage)](https://codeclimate.com/github/MrMAx-26/python-project-50/test_coverage)
 
-Пример работы пакета:
+### Вычислитель отличий:
+«Вычислитель отличий» - это программа, которая определяет разницу между двумя структурами данных. Это популярная задача, для решения которой существует множество онлайн-сервисов, таких как jsondiff. Аналогичный механизм, например, используется при выводе тестов или при автоматическом отслеживании изменений в файлах конфигурации.
+Возможности утилиты:
+* Поддержка различных форматов ввода: yaml, json
+* Создание отчета в виде обычного текста, в формате stylish и в формате json
 
-[![asciicast](https://asciinema.org/a/16B3kyUzlyDQVYi7sLaJgYndS.svg)](https://asciinema.org/a/16B3kyUzlyDQVYi7sLaJgYndS)
+## Пример установки и работы пакета:
