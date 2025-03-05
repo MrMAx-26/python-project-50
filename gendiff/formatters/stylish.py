@@ -9,23 +9,22 @@ def stylish(diff):
                 status = val.get('status')
                 value = val.get('value')
                 formatted_value = iter(value, depth + 1)
-                match status:
-                    case 'added':
-                        result.append(f'{indent}+ {key}: {formatted_value}')
-                    case 'removed':
-                        result.append(f'{indent}- {key}: {formatted_value}')
-                    case 'unchanged':
-                        result.append(f'{indent}  {key}: {formatted_value}')
-                    case 'changed':
-                        old_value = iter(val['old_value'], depth + 1)
-                        new_value = iter(val['new_value'], depth + 1)
-                        result.append(f'{indent}- {key}: {old_value}')
-                        result.append(f'{indent}+ {key}: {new_value}')
-                    case 'nested':
-                        result.append(f'{indent}  {key}: {formatted_value}')
-                    case _:
-                        formatted_value = iter(val, depth + 1)
-                        result.append(f'{indent}  {key}: {formatted_value}')
+                if status == 'added':
+                    result.append(f'{indent}+ {key}: {formatted_value}')
+                elif status == 'removed':
+                    result.append(f'{indent}- {key}: {formatted_value}')
+                elif status == 'unchanged':
+                    result.append(f'{indent}  {key}: {formatted_value}')
+                elif status == 'changed':
+                    old_value = iter(val['old_value'], depth + 1)
+                    new_value = iter(val['new_value'], depth + 1)
+                    result.append(f'{indent}- {key}: {old_value}')
+                    result.append(f'{indent}+ {key}: {new_value}')
+                elif status == 'nested':
+                    result.append(f'{indent}  {key}: {formatted_value}')
+                else:
+                    formatted_value = iter(val, depth + 1)
+                    result.append(f'{indent}  {key}: {formatted_value}')
             else:
                 formatted_value = iter(val, depth + 1)
                 result.append(f'{indent}  {key}: {formatted_value}')

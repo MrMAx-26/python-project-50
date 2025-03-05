@@ -11,7 +11,9 @@ def sample_diff():
     return {
         'key1': {'status': 'added', 'value': 'value1'},
         'key2': {'status': 'removed', 'value': 'value2'},
-        'key3': {'status': 'changed', 'old_value': 'old_value3', 'new_value': 'new_value3'},
+        'key3': {'status': 'changed', 'old_value': 'old_value3', 
+            'new_value': 'new_value3'
+        },
         'key4': {'status': 'unchanged', 'value': 'value4'},
         'key5': {'status': 'nested', 'value': {
             'nested_key1': {'status': 'added', 'value': 'nested_value1'},
@@ -31,7 +33,8 @@ def test_stylish_added(sample_diff):
 
 
 def test_stylish_removed(sample_diff):
-    diff = {'key2': {'status': 'removed', 'value': sample_diff['key2']['value']}}
+    diff = {'key2': {'status': 'removed', 
+        'value': sample_diff['key2']['value']}}
     expected_output = (
         "{\n"
         "  - key2: value2\n"
@@ -42,7 +45,10 @@ def test_stylish_removed(sample_diff):
 
 def test_stylish_changed(sample_diff):
     diff = {
-        'key3': {'status': 'changed', 'old_value': sample_diff['key3']['old_value'], 'new_value': sample_diff['key3']['new_value']},
+        'key3': {'status': 'changed',
+            'old_value': sample_diff['key3']['old_value'],
+            'new_value': sample_diff['key3']['new_value']
+        },
         'key4': {'status': 'unchanged', 'value': sample_diff['key4']['value']}
     }
     expected_output = (
@@ -180,7 +186,9 @@ def test_plain_removed():
 
 def test_plain_changed():
     diff = {
-        'key1': {'status': 'changed', 'old_value': 'old_value', 'new_value': 'new_value'},
+        'key1': {'status': 'changed', 'old_value': 'old_value',
+            'new_value': 'new_value'
+        },
         'key2': {'status': 'unchanged', 'value': 'unchanged_value'},
     }
     expected_output = (
