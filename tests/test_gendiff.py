@@ -2,7 +2,9 @@ from gendiff.formatters import stylish
 from gendiff.engine import get_diff
 from gendiff.formatters import plain
 from gendiff.formatters import json
-from json import dumps
+from json import dumps, dump
+import yaml
+from gendiff import parser
 import pytest
 
 
@@ -268,3 +270,45 @@ def test_get_json(file_pairs):
     for file1, file2, expected_output in file_pairs:
         diff = get_diff(file1, file2)
         assert json.get_json(diff) == expected_output
+
+
+def test_is_json():
+    assert parser.is_json("file.json") is True
+    assert parser.is_json("file.yml") is False
+    assert parser.is_json("file.yaml") is False
+    assert parser.is_json("file.txt") is False
+
+
+def test_is_yaml():
+    assert parser.is_yaml("file.yml") is True
+    assert parser.is_yaml("file.yaml") is True
+    assert parser.is_yaml("file.json") is False
+    assert parser.is_yaml("file.txt") is False
+
+
+@pytest.fixture
+def json_file(tmp_path):
+    data = {"key": "value"}
+    json_file = tmp_path / "test.json"
+    with open(json_file, 'w') as f:
+        dump(data, f)
+    return json_file
+
+
+@pytest.fixture
+def yaml_file(tmp_path):
+    data = {"key": "value"}
+    yaml_file = tmp_path / "test.yaml"
+    with open(yaml_file, 'w') as f:
+        yaml.dump(data, f)
+    return yaml_file
+
+
+def test_get_file_json(json_file):
+    result = parser.get_file(json_file)
+    assert result == {"key": "value"}
+
+
+def test_get_file_yaml(yaml_file):
+    result = parser.get_file(yaml_file)
+    assert result == {"key": "value"}

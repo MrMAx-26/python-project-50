@@ -1,3 +1,9 @@
+# Почему-то Hexlet-check не пропустил конструкцию match с ошибкой:
+# SyntaxError: Cannot use `match` statement on Python 3.9 
+# (syntax was added in Python 3.10)
+# пришлось переделывать под if'ы
+
+
 def stylish(diff):
     def iter(data, depth=0):
         if not isinstance(data, dict):
