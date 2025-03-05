@@ -5,7 +5,7 @@
 [![Test Coverage](https://api.codeclimate.com/v1/badges/093de477877707bb825c/test_coverage)](https://codeclimate.com/github/MrMAx-26/python-project-50/test_coverage)
 
 <div id="header" align="center">
-  <img src=https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExem1mZWFvcTd5N25peXR3Z3NvaTg5aGFzaDdubzBncXhuZ2RheTFkMCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/2A0HbfqpmoEZ68I0wL/giphy.gif/>
+  <img src="https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExem1mZWFvcTd5N25peXR3Z3NvaTg5aGFzaDdubzBncXhuZ2RheTFkMCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/2A0HbfqpmoEZ68I0wL/giphy.gif" width="100"/>
 </div>
 
 ### Вычислитель отличий:
@@ -15,4 +15,4 @@
 * Создание отчета в виде обычного текста, в формате stylish и в формате json
 
 ## Пример установки и работы пакета:
-[![asciicast](https://asciinema.org/a/yxV6F3jS0lMfABt7Mex5P3uik.svg)](https://asciinema.org/a/yxV6F3jS0lMfABt7Mex5P3uik)
+[![asciicast](https://asciinema.org/a/jNUr7ONo5hgg7DcbMRKz38L2o.svg)](https://asciinema.org/a/jNUr7ONo5hgg7DcbMRKz38L2o)
