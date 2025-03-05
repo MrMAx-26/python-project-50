@@ -11,3 +11,4 @@
 * Создание отчета в виде обычного текста, в формате stylish и в формате json
 
 ## Пример установки и работы пакета:
+[![asciicast](https://asciinema.org/a/yxV6F3jS0lMfABt7Mex5P3uik.svg)](https://asciinema.org/a/yxV6F3jS0lMfABt7Mex5P3uik)
