@@ -1,6 +1,8 @@
 from gendiff.formatters import stylish
 from gendiff.engine import get_diff
 from gendiff.formatters import plain
+from gendiff.formatters import json
+from json import dumps
 import pytest
 
 
@@ -198,3 +200,63 @@ def test_plain_nested():
         "Property 'key1.nested_key' was added with value: 'nested_value'"
     )
     assert plain.plain(diff) == expected_output
+
+
+@pytest.fixture
+def file_pairs():
+    return [
+        (
+            {'key1': 'value1'},
+            {'key1': 'value1', 'key2': 'value2'},
+            dumps({
+                'key1': {'status': 'unchanged', 'value': 'value1'},
+                'key2': {'status': 'added', 'value': 'value2'}
+            }, indent=4)
+        ),
+        (
+            {'key1': 'value1', 'key2': 'value2'},
+            {'key1': 'value1'},
+            dumps({
+                'key1': {'status': 'unchanged', 'value': 'value1'},
+                'key2': {'status': 'removed', 'value': 'value2'}
+            }, indent=4)
+        ),
+        (
+            {'key1': 'value1'},
+            {'key1': 'value2'},
+            dumps({
+                'key1': {
+                    'status': 'changed',
+                    'old_value': 'value1',
+                    'new_value': 'value2'
+                }
+            }, indent=4)
+        ),
+        (
+            {'key1': {'subkey1': 'value1'}},
+            {'key1': {'subkey1': 'value1', 'subkey2': 'value2'}},
+            dumps({
+                'key1': {
+                    'status': 'nested',
+                    'value': {
+                        'subkey1': {'status': 'unchanged', 'value': 'value1'},
+                        'subkey2': {'status': 'added', 'value': 'value2'}
+                    }
+                }
+            }, indent=4)
+        ),
+        (
+            {'key1': 'value1', 'key2': 'value2'},
+            {'key1': 'value1', 'key2': 'value2'},
+            dumps({
+                'key1': {'status': 'unchanged', 'value': 'value1'},
+                'key2': {'status': 'unchanged', 'value': 'value2'}
+            }, indent=4)
+        )
+    ]
+
+
+def test_get_json(file_pairs):
+    for file1, file2, expected_output in file_pairs:
+        diff = get_diff(file1, file2)
+        assert json.get_json(diff) == expected_output
