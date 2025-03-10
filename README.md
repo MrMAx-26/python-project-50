@@ -14,5 +14,16 @@
 * Поддержка различных форматов ввода: yaml, json
 * Создание отчета в виде обычного текста, в формате stylish и в формате json
 
+Для работы требуется установка UV:
+
+1. Install pipx
+```
+sudo apt install pipx
+```
+2. Install uv
+```
+pipx install uv
+```
+
 ## Пример установки и работы пакета:
 [![asciicast](https://asciinema.org/a/jNUr7ONo5hgg7DcbMRKz38L2o.svg)](https://asciinema.org/a/jNUr7ONo5hgg7DcbMRKz38L2o)

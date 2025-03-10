@@ -1,5 +1,5 @@
 from gendiff.diff import get_diff
-from gendiff.formatters import get_formatter
+from gendiff.formatters import format
 from json import dumps, dump
 from gendiff.formatters.plain import format_value
 import yaml
@@ -25,7 +25,7 @@ def sample_diff():
 
 def test_stylish_added(sample_diff):
     diff = {'key1': {'status': 'added', 'value': sample_diff['key1']['value']}}
-    result = get_formatter(diff, 'stylish')
+    result = format(diff, 'stylish')
     expected_output = (
         "{\n"
         "  + key1: value1\n"
@@ -37,7 +37,7 @@ def test_stylish_added(sample_diff):
 def test_stylish_removed(sample_diff):
     diff = {'key2': {'status': 'removed', 
         'value': sample_diff['key2']['value']}}
-    result = get_formatter(diff, 'stylish')
+    result = format(diff, 'stylish')
     expected_output = (
         "{\n"
         "  - key2: value2\n"
@@ -54,7 +54,7 @@ def test_stylish_changed(sample_diff):
         },
         'key4': {'status': 'unchanged', 'value': sample_diff['key4']['value']}
     }
-    result = get_formatter(diff, 'stylish')
+    result = format(diff, 'stylish')
     expected_output = (
         "{\n"
         "  - key3: old_value3\n"
@@ -70,7 +70,7 @@ def test_stylish_nested(sample_diff):
         'key5': {'status': 'nested', 'value': sample_diff['key5']['value']},
         'key2': {'status': 'removed', 'value': sample_diff['key2']['value']}
     }
-    result = get_formatter(diff, 'stylish')
+    result = format(diff, 'stylish')
     expected_output = (
         "{\n"
         "    key5: {\n"
@@ -176,7 +176,7 @@ def test_plain_added():
         'key1': {'status': 'added', 'value': 'new_value'},
         'key2': {'status': 'unchanged', 'value': 'old_value'},
     }
-    result = get_formatter(diff, 'plain')
+    result = format(diff, 'plain')
     expected_output = "Property 'key1' was added with value: 'new_value'"
     assert result == expected_output
 
@@ -186,7 +186,7 @@ def test_plain_removed():
         'key1': {'status': 'removed'},
         'key2': {'status': 'unchanged', 'value': 'old_value'},
     }
-    result = get_formatter(diff, 'plain')
+    result = format(diff, 'plain')
     expected_output = "Property 'key1' was removed"
     assert result == expected_output
 
@@ -198,7 +198,7 @@ def test_plain_changed():
         },
         'key2': {'status': 'unchanged', 'value': 'unchanged_value'},
     }
-    result = get_formatter(diff, 'plain')
+    result = format(diff, 'plain')
     expected_output = (
         "Property 'key1' was updated. From 'old_value' to 'new_value'"
     )
@@ -212,7 +212,7 @@ def test_plain_nested():
         }},
         'key2': {'status': 'unchanged', 'value': 'unchanged_value'},
     }
-    result = get_formatter(diff, 'plain')
+    result = format(diff, 'plain')
     expected_output = (
         "Property 'key1.nested_key' was added with value: 'nested_value'"
     )
@@ -224,7 +224,7 @@ def test_plain_unchanged():
         'key1': {'status': 'unchanged', 'value': 'old_value'},
         'key2': {'status': 'added', 'value': 'new_value'},
     }
-    result = get_formatter(diff, 'plain')
+    result = format(diff, 'plain')
     expected_output = "Property 'key2' was added with value: 'new_value'"
     assert result == expected_output
 
@@ -314,7 +314,7 @@ def file_pairs():
 def test_get_json(file_pairs):
     for file1, file2, expected_output in file_pairs:
         diff = get_diff(file1, file2)
-        result = get_formatter(diff, 'json')
+        result = format(diff, 'json')
         assert result == expected_output
 
 
