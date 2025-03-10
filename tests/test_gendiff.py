@@ -1,4 +1,5 @@
-from gendiff.engine import get_diff, get_formatter
+from gendiff.diff import get_diff
+from gendiff.formatters import get_formatter
 from json import dumps, dump
 from gendiff.formatters.plain import format_value
 import yaml

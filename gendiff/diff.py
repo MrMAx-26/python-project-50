@@ -1,8 +1,3 @@
-from gendiff.formatters.json import get_json as json
-from gendiff.formatters.plain import plain
-from gendiff.formatters.stylish import stylish
-
-
 def get_diff(file1, file2):
     diff = {}
     keys = sorted(set(file1.keys()).union(set(file2.keys())))
@@ -24,12 +19,3 @@ def get_diff(file1, file2):
                 'new_value': file2[key]
             }
     return diff
-
-
-def get_formatter(diff, formatter):
-    if formatter == 'stylish':
-        return stylish(diff)
-    elif formatter == 'plain':
-        return plain(diff)
-    elif formatter == 'json':
-        return json(diff)
