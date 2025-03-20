@@ -1,4 +1,4 @@
-def plain(diff):
+def format_plain(diff):
     def iter(data, path=''):
         result = []
         for key, val in data.items():
