@@ -3,7 +3,7 @@ name = "hexlet-code"
 version = "0.1.0"
 description = "Difference Calculator - is a program that determines the difference between two data structures."
 authors = [
-    { name = "Alex Iset", email= "fl3shtrader@yandex.ru" }
+    { name = "Maxim Shevtsov", email= "Shevtsov_stv@mail.ru" }
 ]
 readme = "README.md"
 requires-python = ">=3.12"
